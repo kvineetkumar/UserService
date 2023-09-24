@@ -1,1 +1,12 @@
+server:
+  port: 8084
 
+spring:
+  application:
+    name: USER-SERVICE
+
+logging:
+  level:
+    root: ERROR
+    com.mykart: DEBUG
+    org.springframework.web: ERROR

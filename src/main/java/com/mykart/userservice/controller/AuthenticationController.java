@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,13 +46,25 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("home")
-    public String home() {
-        return "You secured with JWT";
+    @GetMapping("admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String admin() {
+        return "You secured with JWT Token as ADMIN.";
     }
 
-    @GetMapping("greeting")
+    @GetMapping("user")
+    @PreAuthorize("hasRole('USER')")
+    public String user() {
+        return "You secured with JWT Token as USER.";
+    }
+
+    @GetMapping("public")
+    public String publicData() {
+        return "Free access to public data.";
+    }
+
+    @GetMapping("public/greeting")
     public String greeting() {
-        return "Welcome!";
+        return "Greetings!";
     }
 }

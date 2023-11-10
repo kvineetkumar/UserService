@@ -1,8 +1,10 @@
-package com.demo.jwtauth.config;
+package com.mykart.userservice.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Log4j2
 public class JwtUtil {
 
     private static final String SECRET_KEY = "854c9adc851b0d79f81f839cc5178615ca159214afc5b2c8a6c3e9aab64e193b";
@@ -59,7 +62,14 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, String username) {
-        final String tokenUsername = extractUsername(token);
-        return (tokenUsername.contentEquals(username) && !isTokenExpired(token));
+        try {
+            final String tokenUsername = extractUsername(token);
+            return tokenUsername.contentEquals(username) && !isTokenExpired(token);
+        } catch (SignatureException ex) {
+            log.debug(ex.getMessage());
+        } catch (Exception ex) {
+            log.debug(ex);
+        }
+        return false;
     }
 }
